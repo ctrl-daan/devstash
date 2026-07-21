@@ -20,6 +20,34 @@ Completed
 
 <!-- Keep this updated. Earliest to latest -->
 
+### 2026-07-21 — Dashboard UI Phase 3
+
+Phase 3 of 3 for the dashboard UI layout — the main content area to the right of
+the sidebar. Display-only, pulling data directly from `src/lib/mock-data.ts`.
+
+- Added `src/lib/item-types.ts` — shared lookup: `getItemType(id)` (color +
+  icon) and `getTypeIcon(name)` (Lucide component).
+- Added dashboard card components:
+  - `src/components/dashboard/StatCard.tsx` — a metric tile.
+  - `src/components/dashboard/CollectionCard.tsx` — collection card accented by
+    its dominant (first) type color, with favorite star, item count,
+    description, and a row of type icons.
+  - `src/components/dashboard/ItemCard.tsx` — horizontal item row with a
+    type-colored icon and border, pin/star flags, tags, and date.
+- Rebuilt `src/app/dashboard/page.tsx` to compose the main area:
+  - Dashboard heading + subtitle.
+  - 4 stat cards — Items, Collections, Favorite Items, Favorite Collections.
+  - **Collections** — responsive grid of collection cards (with a "View all"
+    link to the future `/collections` route).
+  - **Pinned** — items where `isPinned` is true.
+  - **Recent** — the 10 most recent items (sorted by `createdAt`).
+- Stats use the actual mock arrays; collection accent uses the first `typeId`
+  (no per-type counts in the mock data). Item type icon rendered via
+  `createElement` to satisfy the `react-hooks/static-components` lint rule.
+- Verified with `npm run build` and `npm run lint` (both clean, TypeScript
+  passes); `/dashboard` serves HTTP 200.
+- Built on branch `feature/dashboard-phase-3`.
+
 ### 2026-07-21 — Dashboard UI Phase 2
 
 Phase 2 of 3 for the dashboard UI layout — the sidebar (Phase 1 left it as a
