@@ -20,6 +20,35 @@ Completed
 
 <!-- Keep this updated. Earliest to latest -->
 
+### 2026-07-21 — Database: Prisma 7 + Neon PostgreSQL
+
+Set up Prisma ORM (v7) with a Neon serverless PostgreSQL database and the initial
+schema from `context/project-overview.md`.
+
+- Installed **Prisma 7.9** — `prisma`, `@prisma/client`, `@prisma/adapter-pg`,
+  `pg`, `dotenv`, `@types/pg`. Read the v7 upgrade guide + Postgres quickstart
+  first (v7 has breaking changes: `prisma.config.ts`, `prisma-client` generator,
+  required driver adapter).
+- `prisma.config.ts` — v7 config; loads `DATABASE_URL` via `dotenv`, migrations
+  at `prisma/migrations`.
+- `prisma/schema.prisma` — generator `prisma-client` → `src/generated/prisma`;
+  `postgresql` datasource (url comes from the config, not the schema). Models:
+  User, Item (+ `ContentType` enum), ItemType, Collection, ItemCollection (join),
+  Tag, plus NextAuth Account / Session / VerificationToken. `@@index`es and
+  `onDelete: Cascade` throughout.
+- `src/lib/prisma.ts` — client singleton using the `PrismaPg` driver adapter
+  (required in v7), with dev hot-reload global caching.
+- `package.json` — added `postinstall: prisma generate` (generated client is
+  gitignored) plus `db:generate` / `db:migrate` / `db:studio`.
+- `.env.example` committed; real `.env`, the generated client, and Prisma's
+  injected `.agents/` / `.windsurf/` / `skills-lock.json` are gitignored.
+- Ran `prisma migrate dev --name init` against the Neon dev branch — created all
+  9 tables (+ the implicit `Item`↔`Tag` join); `prisma migrate status` reports in
+  sync. Verified `npm run build` and `npm run lint` (both clean).
+- Dashboard still reads from `src/lib/mock-data.ts`; wiring pages to Prisma is
+  follow-up work.
+- Built on branch `feature/database-prisma-neon`.
+
 ### 2026-07-21 — Dashboard UI Phase 3
 
 Phase 3 of 3 for the dashboard UI layout — the main content area to the right of

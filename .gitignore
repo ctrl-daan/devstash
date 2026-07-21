@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -42,3 +43,9 @@ next-env.d.ts
 
 # claude skills
 /.claude/skills/
+/src/generated/prisma
+
+# prisma-generated agent skills (kept local, like .claude/skills)
+/.agents/
+/.windsurf/
+/skills-lock.json
