@@ -2,43 +2,33 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  ChevronDown,
-  Code,
-  File,
-  Folder,
-  Image,
-  Layers,
-  Link as LinkIcon,
-  type LucideIcon,
-  Settings,
-  Sparkles,
-  Star,
-  StickyNote,
-  Terminal,
-} from "lucide-react";
+import { ChevronDown, Folder, Layers, Settings, Star } from "lucide-react";
 
-import { collections, currentUser, itemTypes } from "@/lib/mock-data";
+import type {
+  CollectionCardData,
+  DashboardUser,
+  SidebarType,
+} from "@/types/dashboard";
+import { getTypeIcon } from "@/lib/item-types";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebar-context";
 
-// Maps the icon name stored on each item type to its Lucide component.
-const TYPE_ICONS: Record<string, LucideIcon> = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image,
-  Link: LinkIcon,
-};
-
-const favoriteCollections = collections.filter((c) => c.isFavorite);
-// No timestamps on the mock collections yet — treat array order as recency.
-const recentCollections = collections.slice(0, 5);
-
-export function Sidebar() {
+export function Sidebar({
+  types,
+  collections,
+  user,
+}: {
+  types: SidebarType[];
+  collections: CollectionCardData[];
+  user: DashboardUser | null;
+}) {
   const { isOpen, isMobile, close } = useSidebar();
+
+  const favoriteCollections = collections.filter((c) => c.isFavorite);
+  const recentCollections = collections.slice(0, 5);
+
+  const displayName = user?.name ?? "Guest";
+  const email = user?.email ?? "";
 
   // On mobile the sidebar is an overlay drawer; dismiss it after navigating.
   const handleNavigate = () => {
@@ -83,8 +73,8 @@ export function Sidebar() {
         {/* Scrollable nav */}
         <nav className="flex-1 overflow-y-auto px-2 py-2">
           <SidebarSection title="Types">
-            {itemTypes.map((type) => {
-              const Icon = TYPE_ICONS[type.icon] ?? File;
+            {types.map((type) => {
+              const Icon = getTypeIcon(type.icon);
               return (
                 <Link
                   key={type.id}
@@ -140,13 +130,11 @@ export function Sidebar() {
         {/* User area */}
         <div className="flex shrink-0 items-center gap-3 border-t border-sidebar-border px-3 py-3">
           <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-xs font-medium text-sidebar-accent-foreground">
-            {initials(currentUser.name)}
+            {initials(displayName)}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{currentUser.name}</p>
-            <p className="truncate text-xs text-muted-foreground">
-              {currentUser.email}
-            </p>
+            <p className="truncate text-sm font-medium">{displayName}</p>
+            <p className="truncate text-xs text-muted-foreground">{email}</p>
           </div>
           <button
             type="button"

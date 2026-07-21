@@ -18,6 +18,36 @@ Completed
 
 ## History
 
+### 2026-07-21 — Seed database + wire dashboard to Prisma
+
+Replaced the dashboard's mock-data imports with live Prisma/Neon queries, and
+seeded the database so the dashboard has content.
+
+- `prisma/seed.ts` — idempotent seed (clean + recreate) sourced from
+  `src/lib/mock-data.ts`: user, 7 system item types, collections, items, tags,
+  and item↔collection links. Wired via `prisma.config.ts` (`seed: tsx
+  prisma/seed.ts`); added `tsx` dev dependency. Ran `prisma db seed` against the
+  Neon dev branch (1 user, 7 types, 6 collections, 6 items, 15 tags).
+- `src/types/dashboard.ts` — display shapes (`SidebarType`, `CollectionCardData`,
+  `ItemCardData`, `DashboardUser`, `DashboardStats`), denormalized so components
+  don't need a type lookup.
+- `src/lib/data.ts` — server query layer (React `cache`d): `getCurrentUser`,
+  `getSidebarTypes` (filtered item counts), `getCollections` (derived itemCount +
+  distinct types), `getItems`, `getStats`. Scoped to the first user (no auth
+  yet).
+- `src/lib/item-types.ts` — dropped the mock-data dependency; now just
+  `getTypeIcon`.
+- Made `Sidebar`, `CollectionCard`, `ItemCard` props-driven; `DashboardShell`
+  forwards sidebar data. `dashboard/layout.tsx` + `dashboard/page.tsx` fetch from
+  Prisma as async server components.
+- Added `export const dynamic = "force-dynamic"` to the dashboard segment so it
+  renders per-request (no DB access at build time). Added empty states.
+- `src/lib/mock-data.ts` kept as the seed's data source (not deleted). Counts are
+  now derived from real rows, so they reflect the seeded data.
+- Verified `npm run build` + `npm run lint` (clean); `/dashboard` serves HTTP 200
+  with live data (John Doe, React Patterns, useAuth Hook, etc.).
+- Built on branch `feature/dashboard-prisma-data`.
+
 <!-- Keep this updated. Earliest to latest -->
 
 ### 2026-07-21 — Database: Prisma 7 + Neon PostgreSQL
