@@ -83,7 +83,7 @@ export function Sidebar({
                   className="flex items-center gap-3 rounded-md px-2 py-1.5 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
                 >
                   <Icon className="size-4 shrink-0" style={{ color: type.color }} />
-                  <span className="flex-1 truncate">{type.name}</span>
+                  <span className="flex-1 truncate capitalize">{type.name}</span>
                   <span className="text-xs text-muted-foreground">{type.count}</span>
                 </Link>
               );
