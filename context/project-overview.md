@@ -387,6 +387,13 @@ These colors drive:
 - Subtle borders, soft shadows, muted backgrounds
 - **Reference apps:** Notion, Linear, Raycast
 
+### Screenshots
+
+Refer to the screenshots below as a base for the dashboard UI. It does not have to be exact. Use it as a reference:
+
+- @context/screenshots/dashboard-ui-main.png
+- @context/screenshots/dashboard-ui-drawer.png
+
 ### Layout
 
 ```
