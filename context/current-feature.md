@@ -6,7 +6,7 @@
 
 <!-- Not Started|In Progress|Completed -->
 
-Not Started
+Completed
 
 ## Goals
 
@@ -19,6 +19,36 @@ Not Started
 ## History
 
 <!-- Keep this updated. Earliest to latest -->
+
+### 2026-07-21 — Dashboard UI Phase 2
+
+Phase 2 of 3 for the dashboard UI layout — the sidebar (Phase 1 left it as a
+placeholder). Display-only, pulling data directly from `src/lib/mock-data.ts`.
+
+- Added `src/components/dashboard/sidebar-context.tsx` — client context holding
+  `isOpen` / `isMobile`, with a `matchMedia` listener that defaults the sidebar
+  open on desktop and closed (drawer) on mobile.
+- Rebuilt `src/components/dashboard/Sidebar.tsx`:
+  - DevStash brand header.
+  - **Types** section — each type links to `/items/[name]` (e.g.
+    `/items/snippets`) with its colored Lucide icon and item count; collapsible.
+  - **Collections** section — **Favorites** (filtered `isFavorite`, starred) and
+    **Recent** collections; collapsible.
+  - User avatar area pinned at the bottom (initials, name, email, settings).
+  - Inline column on desktop (collapses to `w-0`); fixed overlay drawer with
+    backdrop on mobile, dismissed on navigation.
+- Added `src/components/dashboard/DashboardShell.tsx` — client shell wrapping the
+  full-height sidebar + top bar + main in a `SidebarProvider`; server-rendered
+  page `children` pass straight through.
+- `src/app/dashboard/layout.tsx` now renders `DashboardShell` (sidebar moved to
+  a full-height left column; top bar sits over the main area only).
+- `src/components/dashboard/TopBar.tsx` — the `PanelLeft` toggle is wired to the
+  sidebar context.
+- `/items/*` and `/collections/*` link targets are future-phase routes (404 for
+  now). "Recent" uses mock array order since collections have no timestamps yet.
+- Verified with `npm run build` (compiles clean, TypeScript passes);
+  `/dashboard` serves HTTP 200.
+- Built on branch `feature/dashboard-phase-2`.
 
 ### 2026-07-21 — Dashboard UI Phase 1
 
