@@ -18,6 +18,33 @@ Completed
 
 ## History
 
+### 2026-07-21 — Realistic seed data
+
+Rewrote `prisma/seed.ts` with richer sample data for development and demos, per
+`context/features/seed-spec.md` (overwrites the old mock-data-based seed).
+
+- **User** — `demo@devstash.io` / "Demo User", `isPro: false`, `emailVerified:
+  now`. Password `12345678` hashed with **bcryptjs** (12 rounds). bcryptjs v3
+  ships its own types, so no `@types/bcryptjs` needed.
+- **7 system item types** (`isSystem: true`), singular/lowercase names:
+  `snippet`, `prompt`, `command`, `note`, `file`, `image`, `link` with the spec's
+  icons/colors.
+- **18 items across 5 collections**: React Patterns (3 TS snippets — useDebounce,
+  useLocalStorage, createSafeContext), AI Workflows (3 prompts — review, docs,
+  refactor), DevOps (Dockerfile snippet + deploy command + 2 real links),
+  Terminal Commands (4 commands — git, docker, kill-port, npm), Design Resources
+  (4 real links — Tailwind, shadcn/ui, Radix, Lucide). A few items are
+  favorited/pinned for a lively dashboard.
+- Seed stays idempotent (clean + recreate). Ran `prisma db seed` against the Neon
+  dev branch (1 user, 7 types, 5 collections, 18 items, 26 tags); confirmed with
+  `npm run db:test`.
+- Added `capitalize` to the sidebar type label so the new lowercase names render
+  as "Snippet" etc.; links are `/items/snippet` (still 404 — future routes).
+- `src/lib/mock-data.ts` is no longer the seed source (kept, not deleted).
+- Verified `npm run build` + `npm run lint` (clean); `/dashboard` serves HTTP 200
+  with the new data (Demo User, AI Workflows, useDebounce, etc.).
+- Built on branch `feature/seed-data`.
+
 ### 2026-07-21 — Seed database + wire dashboard to Prisma
 
 Replaced the dashboard's mock-data imports with live Prisma/Neon queries, and
