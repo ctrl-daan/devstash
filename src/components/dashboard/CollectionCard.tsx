@@ -1,14 +1,14 @@
+import { createElement } from "react";
 import { MoreHorizontal, Star } from "lucide-react";
 
-import type { Collection } from "@/lib/mock-data";
-import { getItemType, getTypeIcon } from "@/lib/item-types";
+import type { CollectionCardData } from "@/types/dashboard";
+import { getTypeIcon } from "@/lib/item-types";
 
 const FALLBACK_COLOR = "#6b7280";
 
 // A collection card, accented by the color of its dominant (first) type.
-export function CollectionCard({ collection }: { collection: Collection }) {
-  const dominant = getItemType(collection.typeIds[0]);
-  const accent = dominant?.color ?? FALLBACK_COLOR;
+export function CollectionCard({ collection }: { collection: CollectionCardData }) {
+  const accent = collection.types[0]?.color ?? FALLBACK_COLOR;
 
   return (
     <div
@@ -44,16 +44,17 @@ export function CollectionCard({ collection }: { collection: Collection }) {
         </p>
       )}
 
-      <div className="mt-4 flex items-center gap-2">
-        {collection.typeIds.map((id) => {
-          const type = getItemType(id);
-          if (!type) return null;
-          const Icon = getTypeIcon(type.icon);
-          return (
-            <Icon key={id} className="size-4" style={{ color: type.color }} />
-          );
-        })}
-      </div>
+      {collection.types.length > 0 && (
+        <div className="mt-4 flex items-center gap-2">
+          {collection.types.map((type, i) =>
+            createElement(getTypeIcon(type.icon), {
+              key: i,
+              className: "size-4",
+              style: { color: type.color },
+            }),
+          )}
+        </div>
+      )}
     </div>
   );
 }

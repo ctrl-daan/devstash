@@ -1,10 +1,8 @@
 import { createElement } from "react";
 import { Pin, Star } from "lucide-react";
 
-import type { Item } from "@/lib/mock-data";
-import { getItemType, getTypeIcon } from "@/lib/item-types";
-
-const FALLBACK_COLOR = "#6b7280";
+import type { ItemCardData } from "@/types/dashboard";
+import { getTypeIcon } from "@/lib/item-types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -16,9 +14,8 @@ function formatDate(iso: string) {
 
 // A horizontal item row, bordered by its type color. Used for both the pinned
 // and recent item lists.
-export function ItemCard({ item }: { item: Item }) {
-  const type = getItemType(item.typeId);
-  const color = type?.color ?? FALLBACK_COLOR;
+export function ItemCard({ item }: { item: ItemCardData }) {
+  const { color } = item.type;
 
   return (
     <div
@@ -29,9 +26,7 @@ export function ItemCard({ item }: { item: Item }) {
         className="flex size-10 shrink-0 items-center justify-center rounded-lg"
         style={{ backgroundColor: `${color}1a`, color }}
       >
-        {createElement(getTypeIcon(type?.icon ?? "File"), {
-          className: "size-5",
-        })}
+        {createElement(getTypeIcon(item.type.icon), { className: "size-5" })}
       </span>
 
       <div className="min-w-0 flex-1">
